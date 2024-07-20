@@ -30,7 +30,7 @@ const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) 
 
 export default ViewDirectorBasedOnUserAuthStatus;
 
-ViewDirectorBasedOnUserAuthStatus.PropTypes = {
+ViewDirectorBasedOnUserAuthStatus.propTypes = {
   component: PropTypes.func.isRequired,
   pageProps: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };

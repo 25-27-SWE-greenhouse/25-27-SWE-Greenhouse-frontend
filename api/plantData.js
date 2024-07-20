@@ -2,8 +2,8 @@ import { clientCredentials } from "../utils/client";
 
 const endpoint = clientCredentials.databaseURL;
 
-const getPlants = (uid) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/plants.json`, {
+const getPlants = () => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/plants`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -22,12 +22,11 @@ const deletePlant = (firebaseKey) => new Promise((resolve, reject) => {
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => response.json())
-    .then((data) => resolve((data)))
+    .then(() => resolve({ message: 'Plant successfully deleted' }))
     .catch(reject);
 });
 
-// DONE: GET SINGLE BOOK
+// DONE: GET SINGLE PLANT
 const getSinglePlant = (firebaseKey) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/plants/${firebaseKey}.json`, {
     method: 'GET',
@@ -40,7 +39,7 @@ const getSinglePlant = (firebaseKey) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// DONE: CREATE BOOK
+// DONE: CREATE PLANT
 const createPlant = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/plants.json`, {
     method: 'POST',
@@ -54,7 +53,7 @@ const createPlant = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-// DONE: UPDATE BOOK
+// DONE: UPDATE PLANT
 const updatePlant = (payload) => new Promise((resolve, reject) => {
   fetch(`${endpoint}/plants/${payload.firebaseKey}.json`, {
     method: 'PATCH',
