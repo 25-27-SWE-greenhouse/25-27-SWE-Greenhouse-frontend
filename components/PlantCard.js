@@ -1,24 +1,36 @@
+import React from 'react';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Link from 'next/link';
-import { Card, Button } from 'react-bootstrap';
 import { deletePlant } from '../api/plantData';
 
-function PlantCard({ plantObj }) {
+function PlantCard({
+  id,
+  name,
+  species,
+  onUpdate,
+}) {
+  const deleteThisPlant = () => {
+    if (window.confirm(`Delete ${name}?`)) {
+      deletePlant(id).then(() => onUpdate());
+    }
+  };
+
   return (
-    <Card style={{ width: '24rem', margin: '10px' }}>
-      <Card.Img variant="top" src={plantObj.image} alt={plantObj.name} style={{ height: '400px' }} />
+    <Card style={{ width: '18rem', margin: '10px' }}>
+      {/* <Card.Img variant="top" src={image} alt={name} style={{ height: '400px' }} /> */}
       <Card.Body>
-        <Card.Title>{plantObj.name}</Card.Title>
-        <p className="card-text bold">{plantObj.favorite ? 'Favorite' : ''}</p>
-        {/* DYNAMIC LINK TO VIEW THE PLANT DETAILS */}
-        <Link href={`/plant/${plantObj.firebaseKey}`} passHref>
+        <Card.Title>{name}</Card.Title>
+        <Card.Text><strong>Species:</strong> {species}</Card.Text>
+        {/* <Card.Text><strong>Tags:</strong> {plant.tags.join(', ')}</Card.Text> */}
+        <Link href={`/plant/${id}`} passHref>
           <Button variant="primary" className="m-2">VIEW</Button>
         </Link>
-        {/* DYNAMIC LINK TO EDIT THE PLANT DETAILS */}
-        <Link href={`/plant/edit/${plantObj.firebaseKey}`} passHref>
+        <Link href={`/plant/edit/${id}`} passHref>
           <Button variant="info">EDIT</Button>
         </Link>
-        <Button variant="danger" onClick={() => deletePlant(plantObj.firebaseKey)} className="m-2">
+        <Button variant="danger" onClick={deleteThisPlant} className="m-2">
           DELETE
         </Button>
       </Card.Body>
@@ -27,13 +39,10 @@ function PlantCard({ plantObj }) {
 }
 
 PlantCard.propTypes = {
-  plantObj: PropTypes.shape({
-    image: PropTypes.string,
-    name: PropTypes.string,
-    plant_type: PropTypes.string,
-    favorite: PropTypes.bool,
-    firebaseKey: PropTypes.string,
-  }).isRequired,
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  species: PropTypes.string.isRequired,
+  onUpdate: PropTypes.func.isRequired,
 };
 
 export default PlantCard;

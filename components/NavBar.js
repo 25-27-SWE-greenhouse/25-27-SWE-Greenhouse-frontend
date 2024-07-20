@@ -24,7 +24,7 @@ export default function NavBar() {
             <Link passHref href="/">
               <Nav.Link>Home</Nav.Link>
             </Link>
-            <Link passHref href="/">
+            <Link passHref href="/indoorPlants">
               <Nav.Link>Indoor</Nav.Link>
             </Link>
             <Link passHref href="/">
