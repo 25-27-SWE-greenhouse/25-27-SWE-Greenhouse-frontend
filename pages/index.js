@@ -15,7 +15,7 @@ function Home() {
 
   useEffect(() => {
     getAllThePlants();
-  }, []);
+  });
 
   return (
     <div className="text-center my-4">

@@ -1,4 +1,4 @@
-import { clientCredentials } from "../utils/client";
+import { clientCredentials } from '../utils/client';
 
 const endpoint = clientCredentials.databaseURL;
 
@@ -41,7 +41,7 @@ const getSinglePlant = (firebaseKey) => new Promise((resolve, reject) => {
 
 // DONE: CREATE PLANT
 const createPlant = (payload) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/plants.json`, {
+  fetch(`${endpoint}/plants`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
