@@ -22,7 +22,7 @@ function IndoorPlants() {
 
   useEffect(() => {
     getAllThePlants();
-  }, [user]); // Adding 'user' as a dependency
+  }); // Adding 'user' as a dependency
 
   return (
     <div className="text-center my-4">
