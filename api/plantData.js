@@ -15,8 +15,8 @@ const getPlants = () => new Promise((resolve, reject) => {
 });
 
 // DONE: DELETE PLANT
-const deletePlant = (firebaseKey) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/plants/${firebaseKey}.json`, {
+const deletePlant = (id) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/plants/${id}.json`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -27,11 +27,11 @@ const deletePlant = (firebaseKey) => new Promise((resolve, reject) => {
 });
 
 // DONE: GET SINGLE PLANT
-const getSinglePlant = (firebaseKey) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/plants/${firebaseKey}.json`, {
+const getSinglePlant = (id) => new Promise((resolve, reject) => {
+  fetch(`${endpoint}/plants/${id}`, {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application',
     },
   })
     .then((response) => response.json())
@@ -55,8 +55,8 @@ const createPlant = (payload) => new Promise((resolve, reject) => {
 
 // DONE: UPDATE PLANT
 const updatePlant = (payload) => new Promise((resolve, reject) => {
-  fetch(`${endpoint}/plants/${payload.firebaseKey}.json`, {
-    method: 'PATCH',
+  fetch(`${endpoint}/plants/${payload.id}.json`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -67,10 +67,25 @@ const updatePlant = (payload) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+// View Plant Details including image, name, and species
+const viewPlantDetails = (id) => new Promise((resolve, reject) => {
+  getSinglePlant(id)
+    .then((plantObject) => {
+      resolve({
+        image: plantObject.image,
+        name: plantObject.name,
+        species: plantObject.species,
+        ...plantObject
+      });
+    })
+    .catch((error) => reject(error));
+});
+
 export {
   getPlants,
   createPlant,
   deletePlant,
   getSinglePlant,
   updatePlant,
+  viewPlantDetails,
 };
