@@ -8,15 +8,14 @@ import { useAuth } from '../utils/context/authContext';
 import { createPlant, updatePlant } from '../api/plantData';
 
 const initialState = {
-  img: '',
+  image: '',
   id: '',
   name: '',
   species: '',
 };
+
 function PlantForm({ obj }) {
-  // console.log('initial data in form:', obj);
   const [formInput, setFormInput] = useState(initialState);
-  // const [plants, setPlants] = useState([]);
   const router = useRouter();
   const { user } = useAuth();
 
@@ -35,7 +34,7 @@ function PlantForm({ obj }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (obj) {
-      updatePlant(formInput).then(() => router.push(`/plant/${obj}`));
+      updatePlant(formInput).then(() => router.push('/'));
     } else {
       const payload = { ...formInput, uid: user.uid };
       createPlant(payload).then(({ name }) => {
@@ -49,8 +48,6 @@ function PlantForm({ obj }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      {/* <h2 className="text-white mt-5">{ obj.id ? 'Update' : 'Create'} Plant</h2> */}
-
       <FloatingLabel controlId="floatingInput1" label="Plant" className="mb-3">
         <Form.Control
           type="text"
@@ -108,6 +105,7 @@ PlantForm.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
     species: PropTypes.string,
+    image_URL: PropTypes.string,
   }),
 };
 

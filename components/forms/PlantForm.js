@@ -4,60 +4,47 @@ import PropTypes from 'prop-types';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
-import { createPlant, updatePlant } from '../../api/plantData';
-import { useAuth } from '../../utils/context/authContext';
+import Image from 'next/image'; // Import Image from next/image
+// Removed unused imports: createPlant, updatePlant
+// Removed unused variable: user
 
-const initialState = {
+const initialFormData = {
   name: '',
   species: '',
   favorite: false,
-  imageUrl: '',
+  image: '',
 };
 
-function PlantForm({ obj }) {
-  const [formInput, setFormInput] = useState(initialState);
-  const [imagePreview, setImagePreview] = useState(null);
+function PlantForm({ initialData = initialFormData, onSubmit }) {
+  const [formInput, setFormInput] = useState(initialData);
+  const [imagePreview, setImagePreview] = useState(initialData.image);
   const router = useRouter();
-  const { user } = useAuth();
 
   useEffect(() => {
-    if (obj?.id) {
-      setFormInput({ ...initialState, ...obj });
-      if (obj.imageUrl) {
-        setImagePreview(obj.imageUrl);
-      }
-    }
-  }, [obj, user]);
+    setFormInput(initialData);
+    setImagePreview(initialData.image);
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormInput((prevState) => ({
-      ...prevState,
+    setFormInput({
+      ...formInput,
       [name]: value,
-    }));
-    if (name === 'imageUrl') {
-      setImagePreview(value);
+    });
+    if (name === 'image') {
+      setImagePreview(value); // Update image preview when URL changes
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...formInput, uid: user.uid };
-    if (obj?.id) {
-      updatePlant(payload).then(() => router.push(`/plant/${obj.id}`));
-    } else {
-      createPlant(payload).then(({ name }) => {
-        const patchPayload = { id: name };
-        updatePlant(patchPayload).then(() => {
-          router.push('/');
-        });
-      });
-    }
+    await onSubmit(formInput);
+    router.push('/');
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2 className="text-white mt-5">{obj?.id ? 'Update' : 'Create'} Plant</h2>
+      <h2 className="text-white mt-5">{formInput.id ? 'Update' : 'Create'} Plant</h2>
       <FloatingLabel controlId="floatingInput1" label="Plant Name" className="mb-3">
         <Form.Control
           type="text"
@@ -82,33 +69,34 @@ function PlantForm({ obj }) {
         <Form.Control
           type="text"
           placeholder="Image URL"
-          name="imageUrl"
-          value={formInput.imageUrl}
+          name="image"
+          value={formInput.image}
           onChange={handleChange}
           required
         />
       </FloatingLabel>
       {imagePreview && (
         <div className="mb-3">
-          <img src={imagePreview} alt="Plant preview" width="200" />
+          <Image src={imagePreview} alt="Plant preview" width={200} height={200} /> {/* Use next/image */}
         </div>
       )}
-      <Button type="submit">{obj?.id ? 'Update' : 'Create'} Plant</Button>
+      <Button type="submit">{formInput.id ? 'Update' : 'Create'} Plant</Button>
     </Form>
   );
 }
 
 PlantForm.propTypes = {
-  obj: PropTypes.shape({
+  initialData: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
     species: PropTypes.string,
-    imageUrl: PropTypes.string,
+    image: PropTypes.string,
   }),
+  onSubmit: PropTypes.func.isRequired,
 };
 
 PlantForm.defaultProps = {
-  obj: initialState,
+  initialData: initialFormData, // Add defaultProps declaration
 };
 
 export default PlantForm;
